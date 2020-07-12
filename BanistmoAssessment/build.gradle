@@ -1,7 +1,7 @@
 group 'com.banistmo'
 version '1.0-SNAPSHOT'
 
-defaultTasks 'clean', 'test', 'aggregate'
+//defaultTasks 'clean', 'test', 'aggregate'
 
 repositories {
     mavenLocal()
@@ -37,11 +37,14 @@ dependencies {
     compile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.1.6'
 
 }
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+tasks.withType(Test) {
+    systemProperties = System.properties
+    maxParallelForks = Runtime.runtime.availableProcessors()
 }
 
 gradle.startParameter.continueOnFailure = true
