@@ -1,8 +1,9 @@
 package com.banistmo.certificacion.stepdefinitions;
 
-import com.banistmo.certificacion.tasks.Autenticacion;
-import com.banistmo.certificacion.tasks.BuscarProducto;
-import com.banistmo.certificacion.userinterface.PaginaDeProductos;
+import com.banistmo.certificacion.exceptions.FallaTecnicaPagina;
+import com.banistmo.certificacion.questions.ValidarPDF;
+import com.banistmo.certificacion.tasks.VisualizarTarifario;
+import com.banistmo.certificacion.userinterface.PaginaBanistmo;
 import cucumber.api.java.Before;
 import cucumber.api.java.es.Cuando;
 import cucumber.api.java.es.Dado;
@@ -14,14 +15,15 @@ import net.serenitybdd.screenplay.actors.OnlineCast;
 import net.thucydides.core.annotations.Managed;
 import org.openqa.selenium.WebDriver;
 
-import java.util.List;
-
+import static com.banistmo.certificacion.exceptions.FallaTecnicaPagina.*;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
+import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
+
 
 public class PruebaStepDefinitions {
 
-    private PaginaDeProductos pagina;
+    private PaginaBanistmo pagina;
     @Managed(uniqueSession = true)
     private WebDriver driver;
 
@@ -32,30 +34,24 @@ public class PruebaStepDefinitions {
                 BrowseTheWeb.with(driver));
     }
 
-    @Dado("^que el usuario ingrese a la pagina de compras$")
-    public void queElUsuarioIngreseALaPaginaDeCompras() {
+
+    @Dado("^que el usuario ingrese a la pagina de banistmo$")
+    public void queElUsuarioIngreseALaPaginaDeBanistmo() {
         theActorCalled("actor").attemptsTo(
                 Open.browserOn(pagina)
-        );    }
-
-    @Dado("^que el usuario ingrese y se autentique$")
-    public void queElUsuarioIngreseYSeAutentique() {
-        theActorCalled("actor").attemptsTo(
-                Open.browserOn(pagina),
-                Autenticacion.conLaSiguienteInformacion("dd","")
-        );    }
-
-
-    @Cuando("^agregue los productos al carro de compras:$")
-    public void agregueLosProductosAlCarroDeCompras(List<String> productos) {
-        theActorInTheSpotlight().attemptsTo(
-                BuscarProducto.conLaSiguienteInformacion(productos)
         );
     }
 
-    @Entonces("^deberia verlo en el resumen de su compra$")
-    public void deberiaVerloEnElResumenDeSuCompra() {
+    @Cuando("^ingrese a la seccion de tarifario y abra el pdf de (.*)$")
+    public void ingreseALaSeccionDeTarifarioYAbraElPdfDeTarifasDeCuentasDeDepósitos(String nombreDocumento) {
+        theActorInTheSpotlight().attemptsTo(
+                VisualizarTarifario.conLaSiguienteInformacion(nombreDocumento)
+        );
+    }
 
+    @Entonces("^deberia ver el pdf abierto en una nueva pestaña$")
+    public void deberiaVerElPdfAbiertoEnUnaNuevaPestaña() {
+        theActorInTheSpotlight().should(seeThat(ValidarPDF.sePuedeVisualizar()).orComplainWith(FallaTecnicaPagina.class, FALLA_ABRIENDO_PDF));
     }
 
 
