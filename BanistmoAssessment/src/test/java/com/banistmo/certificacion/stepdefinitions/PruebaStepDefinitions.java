@@ -1,6 +1,8 @@
 package com.banistmo.certificacion.stepdefinitions;
 
-import com.banistmo.certificacion.userinterface.Pagina;
+import com.banistmo.certificacion.tasks.Autenticacion;
+import com.banistmo.certificacion.tasks.BuscarProducto;
+import com.banistmo.certificacion.userinterface.PaginaDeProductos;
 import cucumber.api.java.Before;
 import cucumber.api.java.es.Cuando;
 import cucumber.api.java.es.Dado;
@@ -12,11 +14,14 @@ import net.serenitybdd.screenplay.actors.OnlineCast;
 import net.thucydides.core.annotations.Managed;
 import org.openqa.selenium.WebDriver;
 
+import java.util.List;
+
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
+import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 
 public class PruebaStepDefinitions {
 
-    private Pagina pagina;
+    private PaginaDeProductos pagina;
     @Managed(uniqueSession = true)
     private WebDriver driver;
 
@@ -27,16 +32,25 @@ public class PruebaStepDefinitions {
                 BrowseTheWeb.with(driver));
     }
 
-    @Dado("^que el usuario ingrese y busque un producto$")
-    public void queElUsuarioIngreseYBusqueUnProducto() {
+    @Dado("^que el usuario ingrese a la pagina de compras$")
+    public void queElUsuarioIngreseALaPaginaDeCompras() {
         theActorCalled("actor").attemptsTo(
                 Open.browserOn(pagina)
+        );    }
+
+    @Dado("^que el usuario ingrese y se autentique$")
+    public void queElUsuarioIngreseYSeAutentique() {
+        theActorCalled("actor").attemptsTo(
+                Open.browserOn(pagina),
+                Autenticacion.conLaSiguienteInformacion("dd","")
+        );    }
+
+
+    @Cuando("^agregue los productos al carro de compras:$")
+    public void agregueLosProductosAlCarroDeCompras(List<String> productos) {
+        theActorInTheSpotlight().attemptsTo(
+                BuscarProducto.conLaSiguienteInformacion(productos)
         );
-    }
-
-    @Cuando("^y lo agruegue al carro de compras$")
-    public void yLoAgruegueAlCarroDeCompras() {
-
     }
 
     @Entonces("^deberia verlo en el resumen de su compra$")
