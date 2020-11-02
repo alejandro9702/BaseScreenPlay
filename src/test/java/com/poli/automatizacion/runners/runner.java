@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(CucumberWithSerenity.class)
 @CucumberOptions(
-        features = "src/test/resources/features/prueba.feature",
+        features = "src/test/resources/features/creacion_de_usuario_orangeHRM.feature",
         glue = {"com/poli/automatizacion/stepdefinitions"},
         snippets = SnippetType.CAMELCASE
 )

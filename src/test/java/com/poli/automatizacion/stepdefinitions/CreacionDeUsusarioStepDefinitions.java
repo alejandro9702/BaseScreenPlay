@@ -1,8 +1,11 @@
 package com.poli.automatizacion.stepdefinitions;
 
+import com.poli.automatizacion.interactions.BuscarUsuario;
 import com.poli.automatizacion.models.Usuario;
+import com.poli.automatizacion.questions.ValidarUsuarioCreado;
 import com.poli.automatizacion.tasks.Autenticar;
 import com.poli.automatizacion.tasks.CrearUsuario;
+import com.poli.automatizacion.tasks.EliminarUsuario;
 import com.poli.automatizacion.userinterface.Login;
 import cucumber.api.java.Before;
 import cucumber.api.java.es.Cuando;
@@ -18,10 +21,15 @@ import org.openqa.selenium.WebDriver;
 
 import java.util.List;
 
+import static com.poli.automatizacion.userinterface.UserManagement.*;
+import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
+import static net.serenitybdd.screenplay.questions.WebElementQuestion.the;
+import static net.serenitybdd.screenplay.matchers.WebElementStateMatchers.*;
 
-public class PruebaStepDefinitions {
+
+public class CreacionDeUsusarioStepDefinitions {
 
     private Login pagina;
     private Usuario infoNuevoUsuario;
@@ -54,10 +62,19 @@ public class PruebaStepDefinitions {
 
     @Entonces("^deberia verlo en la lista de usuarios$")
     public void deberiaVerloEnLaListaDeUsuarios() {
+        theActorInTheSpotlight().attemptsTo(
+                BuscarUsuario.conLaInformacion(infoNuevoUsuario)
+        );
+        theActorInTheSpotlight().should(seeThat(the(RESULTADO_BUSQUEDA.of(infoNuevoUsuario.getNuevoNombreUsuario())), isVisible()));
     }
 
     @Y("^luego debe poder borrarlo$")
     public void luegoDebePoderBorrarlo() {
+        theActorInTheSpotlight().attemptsTo(
+                EliminarUsuario.conLaSiguienteInformacion(infoNuevoUsuario),
+                BuscarUsuario.conLaInformacion(infoNuevoUsuario)
+        );
+        theActorInTheSpotlight().should(seeThat(the(BUSQUEDA_SIN_RESULTADOS), isVisible()));
     }
 
 
