@@ -1,7 +1,5 @@
 package com.poli.automatizacion.models;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 public class Usuario {
 
     private String rol;
@@ -10,9 +8,8 @@ public class Usuario {
     private String estado;
     private String nuevaContrasena;
     private String confirmarNuevaContrasena;
-    private final String codigoAleatorio = RandomStringUtils.randomAlphanumeric(6);
 
-    
+
     public String getRol() {
         return rol;
     }
@@ -30,12 +27,10 @@ public class Usuario {
     }
 
     public String getNuevoNombreUsuario() {
-
         return nuevoNombreUsuario;
     }
 
     public void setNuevoNombreUsuario(String nuevoNombreUsuario) {
-        nuevoNombreUsuario = nuevoNombreUsuario + codigoAleatorio;
         this.nuevoNombreUsuario = nuevoNombreUsuario;
     }
 
@@ -63,7 +58,5 @@ public class Usuario {
         this.confirmarNuevaContrasena = confirmarNuevaContrasena;
     }
 
-    public String getCodigoAleatorio() {
-        return codigoAleatorio;
-    }
+
 }
